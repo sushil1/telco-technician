@@ -1,0 +1,21 @@
+{
+	"name": "telcoTechnician-api",
+	"version": "1.0.0",
+	"description": "'api server for telcotechnician'",
+	"main": "index.js",
+	"author": "'TelcoTechnician.com.au'",
+	"license": "MIT",
+	"scripts": {
+		"start": "nodemon --exec babel-node src/index.js"
+	},
+	"dependencies": {
+		"body-parser": "^1.18.2",
+		"dotenv": "^4.0.0",
+		"express": "^4.16.2",
+		"mongoose": "^4.13.7"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-preset-env": "^1.6.1"
+	}
+}

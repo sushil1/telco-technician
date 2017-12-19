@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import auth from './routes/auth';
 import users from './routes/users';
+import quotes from './routes/quotes';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 //routes
 app.use('/api/auth', auth);
 app.use('/api/users', users);
+app.use('/api/quotes', quotes);
 
 app.get('/*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'index.html'));

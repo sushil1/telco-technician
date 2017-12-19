@@ -18,17 +18,26 @@ const userSchema = new Schema(
 			default: 'user'
 		},
 		passwordHash: { type: String, required: true },
-		confirmed: { type: Boolean, default: false }
+		confirmed: { type: Boolean, default: false },
+
+		confirmationToken: { type: String, default: '' }
 	},
 	{ timestamps: true }
 );
+
+userSchema.methods.setPassword = function setPassword(password) {
+	this.passwordHash = bcrypt.hashSync(password, 10);
+};
 
 userSchema.methods.isValidPassword = function isValidPassword(password) {
 	return bcrypt.compareSync(password, this.passwordHash);
 };
 
 userSchema.methods.generateJWT = function generateJWT() {
-	return jwt.sign({ email: this.email }, process.env.JWT_SECRET);
+	return jwt.sign(
+		{ email: this.email, confirmed: this.confirmed },
+		process.env.JWT_SECRET
+	);
 };
 
 userSchema.methods.toAuthJSON = function toAuthJSON() {
@@ -39,8 +48,28 @@ userSchema.methods.toAuthJSON = function toAuthJSON() {
 	};
 };
 
-userSchema.methods.setPassword = function setPassword(password) {
-	this.passwordHash = bcrypt.hashSync(password, 10);
+userSchema.methods.generateResetPasswordToken = function generateResetPasswordToken() {
+	return jwt.sign(
+		{
+			_id: this._id
+		},
+		process.env.JWT_SECRET,
+		{ expiresIn: '1h' }
+	);
+};
+
+userSchema.methods.generateResetPasswordLink = function generateResetPasswordLink() {
+	return `${
+		process.env.HOST
+	}/reset_password/${this.generateResetPasswordToken()}`;
+};
+
+userSchema.methods.generateConfirmationUrl = function generateConfirmationUrl() {
+	return `${process.env.HOST}/confirmation/${this.confirmationToken}`;
+};
+
+userSchema.methods.generateConfirmationToken = function generateConfirmationToken() {
+	this.confirmationToken = this.generateJWT();
 };
 
 userSchema.plugin(uniqueValidator, {

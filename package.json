@@ -15,11 +15,14 @@
 		"express": "^4.16.2",
 		"jsonwebtoken": "^8.1.0",
 		"mongoose": "^4.13.7",
-		"mongoose-unique-validator": "^1.0.6"
+		"mongoose-unique-validator": "^1.0.6",
+		"nodemailer": "^4.4.1"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.26.0",
 		"babel-eslint": "^8.0.3",
+		"babel-plugin-object-rest-spread": "^0.0.0",
+		"babel-plugin-transform-object-rest-spread": "^6.26.0",
 		"babel-preset-env": "^1.6.1",
 		"eslint": "^4.13.1",
 		"eslint-config-airbnb": "^15.0.1",

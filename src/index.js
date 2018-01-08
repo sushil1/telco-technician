@@ -2,10 +2,14 @@ import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import logger from 'morgan';
 import dotenv from 'dotenv';
 import auth from './routes/auth';
 import users from './routes/users';
 import quotes from './routes/quotes';
+import services from './routes/services';
+import bookings from './routes/bookings';
+import tickets from './routes/tickets';
 
 dotenv.config();
 
@@ -21,13 +25,17 @@ mongoose.connection
 	.on('error', err => console.log(`DB connection failed ${err}`));
 
 //middlewares
-
+app.use(logger('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //routes
 app.use('/api/auth', auth);
 app.use('/api/users', users);
 app.use('/api/quotes', quotes);
+app.use('/api/services', services);
+app.use('/api/bookings', bookings);
+app.use('/api/tickets', tickets);
 
 app.get('/*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'index.html'));

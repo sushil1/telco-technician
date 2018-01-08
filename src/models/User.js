@@ -20,10 +20,36 @@ const userSchema = new Schema(
 		passwordHash: { type: String, required: true },
 		confirmed: { type: Boolean, default: false },
 
-		confirmationToken: { type: String, default: '' }
+		confirmationToken: { type: String, default: '' },
+
+		acceptedTicket: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'User'
+			}
+		]
 	},
 	{ timestamps: true }
 );
+
+userSchema.statics = {
+	acceptTicket(userId, ticketId) {
+		return User.update(
+			{ _id: userId },
+			{ $push: { acceptedTicket: ticketId } },
+			{ new: true }
+		);
+	}
+};
+
+userSchema.methods.summary = function summary() {
+	return {
+		_id: this._id,
+		email: this.email,
+		role: this.role,
+		confirmed: this.confirmed
+	};
+};
 
 userSchema.methods.setPassword = function setPassword(password) {
 	this.passwordHash = bcrypt.hashSync(password, 10);
@@ -35,7 +61,7 @@ userSchema.methods.isValidPassword = function isValidPassword(password) {
 
 userSchema.methods.generateJWT = function generateJWT() {
 	return jwt.sign(
-		{ email: this.email, confirmed: this.confirmed },
+		{ email: this.email, confirmed: this.confirmed, role: this.role },
 		process.env.JWT_SECRET
 	);
 };
@@ -44,6 +70,7 @@ userSchema.methods.toAuthJSON = function toAuthJSON() {
 	return {
 		email: this.email,
 		confirmed: this.confirmed,
+		role: this.role,
 		token: this.generateJWT()
 	};
 };

@@ -32,8 +32,7 @@ router.get('/', authenticateStaff, (req, res) => {
 	} else if (req.currentUser.role === 'technician') {
 		ticketQuery = { assignedStaff: req.currentUser._id };
 	}
-	console.log('ticketQuery == ', ticketQuery);
-	console.log('currentUser == ', req.currentUser);
+
 
 	Ticket.find(ticketQuery)
 		.populate('service', 'name')
@@ -42,6 +41,24 @@ router.get('/', authenticateStaff, (req, res) => {
 			res.status(200).json({
 				tickets
 			});
+		})
+		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
+});
+
+router.get('/tracker', (req, res) => {
+
+
+	Ticket.findOne(req.query)
+		.populate('service', 'name')
+		.populate('assignedStaff', 'email')
+		.then(ticket => {
+			if(ticket){
+			res.status(200).json({
+				ticket
+			})
+		} else{
+			res.status(400).json({ errors: {global: 'Not found'}})
+		}
 		})
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });

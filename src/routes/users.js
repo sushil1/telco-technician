@@ -3,9 +3,37 @@ import User from '../models/User';
 import parseErrors from '../utils/parseErrors';
 import { sendConfirmationEmail } from '../mailer';
 import authenticateStaff from '../middlewares/authenticateStaff';
+import authenticate from '../middlewares/authenticate';
 import adminOnly from '../middlewares/adminOnly';
 
 const router = new Router();
+
+
+router.get('/current_user', authenticate, (req, res) => {
+	console.log(req.currentUser)
+	res.status(200).json({
+		user: {
+			email:req.currentUser.email,
+			confirmed: req.currentUser.confirmed,
+			role:req.currentUser.role
+		}
+	})
+})
+
+
+//get staffOptions for form input
+router.get('/staff', authenticateStaff, (req, res) => {
+	User.find({ role: 'technician' })
+		.then(users => {
+			const options = users.map(user => ({
+				key: user._id,
+				value: user._id,
+				text: `${user.email} -- ${user.role}`
+			}));
+			res.status(200).json({ options });
+		})
+		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
+});
 
 router.post('/', adminOnly, (req, res) => {
 	const { email, password } = req.body.user;
@@ -55,18 +83,9 @@ router.delete('/:_id', adminOnly, (req, res) => {
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-//get staffOptions for form input
-router.get('/staff', authenticateStaff, (req, res) => {
-	User.find({ role: 'technician' })
-		.then(users => {
-			const options = users.map(user => ({
-				key: user._id,
-				value: user._id,
-				text: `${user.email} -- ${user.role}`
-			}));
-			res.status(200).json({ options });
-		})
-		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
-});
+
+
+
+
 
 export default router;

@@ -24,7 +24,8 @@ export default (req, res, next) => {
 						req.currentUser = {
 							_id: user._id,
 							email: user.email,
-							role: user.role
+							role: user.role,
+							confirmed: user.confirmed
 						};
 						next();
 					} else {

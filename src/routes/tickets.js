@@ -11,12 +11,11 @@ import authenticateStaff from '../middlewares/authenticateStaff';
 
 const router = new Router();
 
-router.post('/', authenticateStaff, (req, res) => {
+router.post('/', authenticate, authenticateStaff, (req, res) => {
 	const { data } = req.body;
 	const { bookingId, quoteId } = data;
 	const user = req.currentUser._id;
-	console.log('bookingId === ', !!bookingId);
-	console.log(' quoteId === ', !!quoteId);
+
 
 	// bookingId &&
 	// 	Booking.findByIdAndUpdate({ _id: bookingId }, { proceedToTicket: true });
@@ -25,7 +24,7 @@ router.post('/', authenticateStaff, (req, res) => {
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-router.get('/', authenticateStaff, (req, res) => {
+router.get('/', authenticate, authenticateStaff, (req, res) => {
 	let ticketQuery;
 	if (req.currentUser.role === 'admin') {
 		ticketQuery = {};
@@ -63,14 +62,14 @@ router.get('/tracker', (req, res) => {
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-router.get('/:_id', authenticateStaff, (req, res) => {
+router.get('/:_id', authenticate, authenticateStaff, (req, res) => {
 	Ticket.findById(req.params._id)
 		.populate('service', 'name')
 		.then(ticket => res.status(200).json({ ticket }))
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-router.patch('/:_id', authenticateStaff, (req, res) => {
+router.patch('/:_id', authenticate, authenticateStaff, (req, res) => {
 	const { data } = req.body;
 
 
@@ -83,7 +82,7 @@ router.patch('/:_id', authenticateStaff, (req, res) => {
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-router.patch('/accept/:_id', authenticateStaff, (req, res) => {
+router.patch('/accept/:_id', authenticate, authenticateStaff, (req, res) => {
 	const ticketId = req.params._id
 	const userId = req.currentUser._id
 
@@ -95,7 +94,7 @@ router.patch('/accept/:_id', authenticateStaff, (req, res) => {
 	.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 })
 
-router.patch('/decline/:_id', authenticateStaff, (req, res) => {
+router.patch('/decline/:_id', authenticate, authenticateStaff, (req, res) => {
 	const ticketId = req.params._id
 	const userId = req.currentUser._id
 

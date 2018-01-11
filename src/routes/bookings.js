@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Booking from '../models/Booking';
 import parseErrors from '../utils/parseErrors';
 import Service from '../models/Service';
+import adminOnly from '../middlewares/adminOnly'
 
 const router = new Router();
 
@@ -39,7 +40,7 @@ router.patch('/:_id', (req, res) => {
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-router.delete('/:_id', (req, res) => {
+router.delete('/:_id', adminOnly, (req, res) => {
 	const id = req.params._id;
 	Booking.findByIdAndRemove({ _id: req.params._id })
 		.then(() => res.status(200).json({ id }))

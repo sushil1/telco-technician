@@ -10,7 +10,6 @@ const router = new Router();
 
 
 router.get('/current_user', authenticate, (req, res) => {
-	console.log(req.currentUser)
 	res.status(200).json({
 		user: {
 			email:req.currentUser.email,
@@ -22,7 +21,7 @@ router.get('/current_user', authenticate, (req, res) => {
 
 
 //get staffOptions for form input
-router.get('/staff', authenticateStaff, (req, res) => {
+router.get('/staff', authenticate, authenticateStaff, (req, res) => {
 	User.find({ role: 'technician' })
 		.then(users => {
 			const options = users.map(user => ({
@@ -35,7 +34,7 @@ router.get('/staff', authenticateStaff, (req, res) => {
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
-router.post('/', adminOnly, (req, res) => {
+router.post('/', (req, res) => {
 	const { email, password } = req.body.user;
 	const newUser = new User({ email });
 	newUser.setPassword(password);

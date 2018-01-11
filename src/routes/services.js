@@ -8,7 +8,6 @@ const router = new Router();
 
 router.post('/', adminOnly, (req, res) => {
 	const serviceData = req.body;
-	console.log(req.body);
 	const newService = new Service(serviceData);
 	newService
 		.save()

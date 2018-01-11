@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
 				errors: { global: 'Wrong password, Try Again' }
 			});
 		}
-	});
+	})
 });
 
 router.post('/confirmation', (req, res) => {

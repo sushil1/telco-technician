@@ -11,10 +11,15 @@ import services from './routes/services';
 import bookings from './routes/bookings';
 import tickets from './routes/tickets';
 
-dotenv.config();
+dotenv.config({
+	path: path.join(__dirname, ".env")
+});
 
 const app = express();
 const PORT = process.env.PORT;
+
+app.use("/static", express.static(path.join(__dirname, "static")));
+
 
 //db
 mongoose.Promise = global.Promise;

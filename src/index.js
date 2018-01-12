@@ -10,6 +10,8 @@ import quotes from './routes/quotes';
 import services from './routes/services';
 import bookings from './routes/bookings';
 import tickets from './routes/tickets';
+import payments from './routes/payments';
+import jobstatus from './routes/jobstatus';
 
 dotenv.config({
 	path: path.join(__dirname, ".env")
@@ -41,6 +43,8 @@ app.use('/api/quotes', quotes);
 app.use('/api/services', services);
 app.use('/api/bookings', bookings);
 app.use('/api/tickets', tickets);
+app.use('/api/payments', payments);
+app.use('/api/jobstatus', jobstatus);
 
 app.get('/*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'index.html'));

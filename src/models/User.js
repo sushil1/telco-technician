@@ -13,6 +13,11 @@ const userSchema = new Schema(
 			index: true,
 			unique: true
 		},
+		name: {
+			type: String,
+			required: true,
+			trim: true
+		},
 		role: {
 			type: String,
 			default: 'user'
@@ -47,7 +52,8 @@ userSchema.methods.summary = function summary() {
 		_id: this._id,
 		email: this.email,
 		role: this.role,
-		confirmed: this.confirmed
+		confirmed: this.confirmed,
+		name:this.name
 	};
 };
 

@@ -34,7 +34,7 @@ router.get('/', authenticate, authenticateStaff, (req, res) => {
 
 	Ticket.find(ticketQuery)
 		.populate('service', 'name')
-		.populate('assignedStaff', 'email')
+		.populate('assignedStaff', 'name')
 		.populate('jobStatus', 'name')
 		.populate('paymentStatus', 'name')
 		.then(tickets => {
@@ -50,7 +50,7 @@ router.get('/tracker', (req, res) => {
 
 	Ticket.findOne(req.query)
 		.populate('service', 'name')
-		.populate('assignedStaff', 'email')
+		.populate('assignedStaff', 'name')
 		.populate('jobStatus', 'name')
 		.populate('paymentStatus', 'name')
 		.then(ticket => {
@@ -68,7 +68,7 @@ router.get('/tracker', (req, res) => {
 router.get('/:_id', authenticate, authenticateStaff, (req, res) => {
 	Ticket.findById(req.params._id)
 		.populate('service', 'name')
-		.populate('assignedStaff', 'email')
+		.populate('assignedStaff', 'name')
 		.populate('jobStatus', 'name')
 		.populate('paymentStatus', 'name')
 		.then(ticket => res.status(200).json({ ticket }))
@@ -81,7 +81,7 @@ router.patch('/:_id', authenticate, authenticateStaff, (req, res) => {
 
 				Ticket.findByIdAndUpdate({ _id: req.params._id }, { ...data }, { new: true })
 					.populate('service', 'name')
-					.populate('assignedStaff', 'email')
+					.populate('assignedStaff', 'name')
 					.populate('jobStatus', 'name')
 					.populate('paymentStatus', 'name')
 
@@ -97,7 +97,7 @@ router.patch('/accept/:_id', authenticate, authenticateStaff, (req, res) => {
 
 	Ticket.findByIdAndUpdate({_id: ticketId}, {$addToSet: {acceptedBy: userId }}, {new:true, upsert:true})
 	.populate('service', 'name')
-	.populate('assignedStaff', 'email')
+	.populate('assignedStaff', 'name')
 	.populate('jobStatus', 'name')
 	.populate('paymentStatus', 'name')
 	.then(ticket => res.status(200).json({ ticket }))
@@ -112,7 +112,7 @@ router.patch('/decline/:_id', authenticate, authenticateStaff, (req, res) => {
 
 	Ticket.findByIdAndUpdate({_id: ticketId},{assignedStaff:null}, {new:true})
 	.populate('service', 'name')
-	.populate('assignedStaff', 'email')
+	.populate('assignedStaff', 'name')
 	.populate('jobStatus', 'name')
 	.populate('paymentStatus', 'name')
 	.then(ticket => res.status(200).json({ ticket }))

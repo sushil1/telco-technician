@@ -27,7 +27,7 @@ router.get('/staff', authenticate, authenticateStaff, (req, res) => {
 			const options = users.map(user => ({
 				key: user._id,
 				value: user._id,
-				text: `${user.email} -- ${user.role}`
+				text: `${user.name} -- ${user.role}`
 			}));
 			res.status(200).json({ options });
 		})
@@ -35,8 +35,8 @@ router.get('/staff', authenticate, authenticateStaff, (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	const { email, password } = req.body.user;
-	const newUser = new User({ email });
+	const { email, name, password } = req.body.user;
+	const newUser = new User({ email, name });
 	newUser.setPassword(password);
 	newUser.generateConfirmationToken();
 	newUser

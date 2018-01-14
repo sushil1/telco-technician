@@ -6,7 +6,7 @@ const quoteSchema = new Schema(
 		address: { type: String, trim: true },
 		mobile: { type: String, trim: true },
 		message: { type: String, trim: true },
-		proceedToTicket: { type: Boolean, default: false }
+		proceedToTicket: { type: Boolean, default: false },
 	},
 	{ timestamps: true }
 );

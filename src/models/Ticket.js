@@ -11,8 +11,8 @@ const ticketSchema = new Schema(
 		bookingId: { type: String, trim: true },
 		quoteId: { type: String, trim: true },
 		assignedStaff: { type: Schema.Types.ObjectId, ref: 'User' },
-		jobStatus: { type: String, required: true },
-		paymentStatus: { type: String, required: true },
+		jobStatus: { type: Schema.Types.ObjectId, ref: 'JobStatus' },
+		paymentStatus: { type: Schema.Types.ObjectId, ref: 'Payment' },
 		message: { type: String, trim: true },
 		notes: { type: String, trim: true },
 		cost: { type: String, trim: true },
@@ -31,7 +31,7 @@ ticketSchema.statics = {
 		return this.create({
 			...args,
 			createdBy: user
-		});
+		})
 	}
 };
 

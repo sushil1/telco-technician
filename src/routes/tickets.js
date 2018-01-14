@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import Ticket from '../models/Ticket';
 import parseErrors from '../utils/parseErrors';
-import Service from '../models/Service';
-import Booking from '../models/Booking';
-import Quote from '../models/Quote';
+//import Service from '../models/Service';
+
 
 import authenticate from '../middlewares/authenticate';
 import adminOnly from '../middlewares/adminOnly';
@@ -36,6 +35,8 @@ router.get('/', authenticate, authenticateStaff, (req, res) => {
 	Ticket.find(ticketQuery)
 		.populate('service', 'name')
 		.populate('assignedStaff', 'email')
+		.populate('jobStatus', 'name')
+		.populate('paymentStatus', 'name')
 		.then(tickets => {
 			res.status(200).json({
 				tickets
@@ -50,6 +51,8 @@ router.get('/tracker', (req, res) => {
 	Ticket.findOne(req.query)
 		.populate('service', 'name')
 		.populate('assignedStaff', 'email')
+		.populate('jobStatus', 'name')
+		.populate('paymentStatus', 'name')
 		.then(ticket => {
 			if(ticket){
 			res.status(200).json({
@@ -65,6 +68,9 @@ router.get('/tracker', (req, res) => {
 router.get('/:_id', authenticate, authenticateStaff, (req, res) => {
 	Ticket.findById(req.params._id)
 		.populate('service', 'name')
+		.populate('assignedStaff', 'email')
+		.populate('jobStatus', 'name')
+		.populate('paymentStatus', 'name')
 		.then(ticket => res.status(200).json({ ticket }))
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
@@ -76,6 +82,8 @@ router.patch('/:_id', authenticate, authenticateStaff, (req, res) => {
 				Ticket.findByIdAndUpdate({ _id: req.params._id }, { ...data }, { new: true })
 					.populate('service', 'name')
 					.populate('assignedStaff', 'email')
+					.populate('jobStatus', 'name')
+					.populate('paymentStatus', 'name')
 
 
 		.then(ticket => res.status(200).json({ ticket }))
@@ -90,6 +98,8 @@ router.patch('/accept/:_id', authenticate, authenticateStaff, (req, res) => {
 	Ticket.findByIdAndUpdate({_id: ticketId}, {$addToSet: {acceptedBy: userId }}, {new:true, upsert:true})
 	.populate('service', 'name')
 	.populate('assignedStaff', 'email')
+	.populate('jobStatus', 'name')
+	.populate('paymentStatus', 'name')
 	.then(ticket => res.status(200).json({ ticket }))
 	.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 })
@@ -103,6 +113,8 @@ router.patch('/decline/:_id', authenticate, authenticateStaff, (req, res) => {
 	Ticket.findByIdAndUpdate({_id: ticketId},{assignedStaff:null}, {new:true})
 	.populate('service', 'name')
 	.populate('assignedStaff', 'email')
+	.populate('jobStatus', 'name')
+	.populate('paymentStatus', 'name')
 	.then(ticket => res.status(200).json({ ticket }))
 	.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 })

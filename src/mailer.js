@@ -2,6 +2,15 @@ import nodemailer from 'nodemailer';
 
 const from = '"TelcoTechnician" <info@telcotechnician.com.au>';
 
+// const mailChimpHost = `https://${}`
+//
+// function mailChimpSetup(){
+// 	return nodemailer.createTransport({
+// 		host:mailChimpHost,
+// 	})
+// }
+
+
 function setup() {
 	return nodemailer.createTransport({
 		host: process.env.EMAIL_HOST,

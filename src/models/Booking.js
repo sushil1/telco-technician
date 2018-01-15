@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import generateId from '../utils/generateId'
 
 const bookingSchema = new Schema(
 	{
@@ -9,10 +10,27 @@ const bookingSchema = new Schema(
 		address: { type: String, required: true, trim: true },
 		service: { type: Schema.Types.ObjectId, ref: 'Service' },
 		message: { type: String, trim: true },
-		proceedToTicket: { type: Boolean, default: false }
+		proceedToTicket: { type: Boolean, default: false },
+		refrenceId: { type: String },
+
 	},
 	{ timestamps: true }
 );
+
+const generateRefId = () => `B${generateId()}`
+
+bookingSchema.pre('save', function(next, done){
+	this.refrenceId = generateRefId()
+	mongoose.models.Booking.findOne({refrenceId: this.refrenceId})
+		.then((booking)=>{
+			if(!booking){next()}
+			if(booking){
+				this.refrenceId = generateRefId()
+			}
+		})
+		.catch(err => done(err))
+})
+
 
 bookingSchema.methods.toJSON = function toJSON() {
 	return {
@@ -24,6 +42,7 @@ bookingSchema.methods.toJSON = function toJSON() {
 		address: this.address,
 		service: this.service,
 		message: this.message,
+		refrenceId: this.refrenceId,
 		proceedToTicket: this.proceedToTicket,
 		createdAt: this.createdAt
 	};

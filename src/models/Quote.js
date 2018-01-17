@@ -13,21 +13,9 @@ const quoteSchema = new Schema(
 	{ timestamps: true }
 );
 
-const generateRefId = () => `Q${generateId()}`
-
-quoteSchema.pre('save', function(next, done){
-	this.refrenceId = generateRefId()
-	mongoose.models.Quote.findOne({refrenceId: this.refrenceId})
-		.then((quote)=>{
-			if(!quote){next()}
-			if(quote){
-				this.refrenceId = generateRefId()
-			}
-		})
-		.catch(err => done(err))
-})
-
-
+quoteSchema.methods.setRefrenceId = function setRefrenceId(){
+	this.refrenceId = `Q${generateId()}`
+}
 
 
 quoteSchema.methods.toJSON = function toJSON() {

@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import Ticket from '../models/Ticket';
 import parseErrors from '../utils/parseErrors';
-//import Service from '../models/Service';
+import Quote from '../models/Quote';
+import Booking from '../models/Booking';
+
 
 
 import authenticate from '../middlewares/authenticate';
@@ -47,7 +49,6 @@ router.get('/', authenticate, authenticateStaff, (req, res) => {
 
 router.get('/tracker', (req, res) => {
 
-
 	Ticket.findOne(req.query)
 		.populate('service', 'name')
 		.populate('assignedStaff', 'name')
@@ -58,7 +59,8 @@ router.get('/tracker', (req, res) => {
 			res.status(200).json({
 				ticket
 			})
-		} else{
+		} 
+		else{
 			res.status(400).json({ errors: {global: 'Not found'}})
 		}
 		})

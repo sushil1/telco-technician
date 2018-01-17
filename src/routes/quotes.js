@@ -7,7 +7,8 @@ const router = new Router();
 router.post('/', (req, res) => {
 	const { data } = req.body;
 	const newQuote = new Quote(data)
-	newQuote
+	newQuote.setRefrenceId()
+		newQuote
 		.save()
 		.then(quote => res.status(201).json({ quote }))
 		.catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));

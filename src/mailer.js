@@ -2,15 +2,6 @@ import nodemailer from 'nodemailer';
 
 const from = '"TelcoTechnician" <info@telcotechnician.com.au>';
 
-// const mailChimpHost = `https://${}`
-//
-// function mailChimpSetup(){
-// 	return nodemailer.createTransport({
-// 		host:mailChimpHost,
-// 	})
-// }
-
-
 function setup() {
 	return nodemailer.createTransport({
 		host: process.env.EMAIL_HOST,
@@ -38,6 +29,7 @@ export function sendConfirmationEmail(user) {
 			<hr />
 			<p>If you are not redirected, please copy then link below</p>
 			<p>${user.generateConfirmationUrl()}</p>
+			<p>Please, do not reply this email</p>
 		`
 	};
 
@@ -60,6 +52,7 @@ export function sendResetPasswordEmail(user) {
 			<hr />
 			<p>If you are not redirected, please copy then link below</p>
       <p>${user.generateResetPasswordLink()}</p>
+			<p>Please, do not reply this email</p>
     `
 	};
 
@@ -76,6 +69,7 @@ export function sendCorrectUserEmail(user) {
 		html: `
       <h4>Your password has been changed successfully.</h4>
 			<p>If you are haven't changed you password recently, please contact us.</p>
+			<p>Please, do not reply this email</p>
     `
 	};
 

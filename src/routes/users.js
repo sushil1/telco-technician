@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
 	newUser.setPassword(password);
 	newUser.generateConfirmationToken();
 	newUser
-		.save()
+		.save()	
 		.then(user => {
 			sendConfirmationEmail(user);
 			res.status(201).json({ user: user.toAuthJSON() });

@@ -9,13 +9,11 @@ import adminOnly from '../middlewares/adminOnly';
 
 const router = new Router();
 
-
-
-
 router.get('/current_user', authenticate, (req, res) => {
 	res.status(200).json({
 		user: {
 			email:req.currentUser.email,
+			name:req.currentUser.name,
 			confirmed: req.currentUser.confirmed,
 			role:req.currentUser.role
 		}
@@ -43,7 +41,7 @@ router.post('/', (req, res) => {
 	newUser.setPassword(password);
 	newUser.generateConfirmationToken();
 	newUser
-		.save()	
+		.save()
 		.then(user => {
 			sendConfirmationEmail(user);
 			res.status(201).json({ user: user.toAuthJSON() });

@@ -19,6 +19,7 @@ export default (req, res, next) => {
 					if (user && user.role === 'admin') {
 						req.currentUser = {
 							_id: user._id,
+							name: user.name,
 							email: user.email,
 							role: user.role,
 							confirmed: user.confirmed

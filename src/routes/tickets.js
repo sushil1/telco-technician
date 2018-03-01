@@ -40,7 +40,7 @@ router.get('/', authenticate, authenticateStaff, (req, res) => {
 		.populate('jobStatus', 'name')
 		.populate('paymentStatus', 'name')
 		.then(tickets => {
-			res.status(200).json({
+			res.status(200).json({	
 				tickets
 			});
 		})
@@ -59,7 +59,7 @@ router.get('/tracker', (req, res) => {
 			res.status(200).json({
 				ticket
 			})
-		} 
+		}
 		else{
 			res.status(400).json({ errors: {global: 'Not found'}})
 		}

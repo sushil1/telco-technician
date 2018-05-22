@@ -3,6 +3,8 @@ import Booking from '../models/Booking';
 import parseErrors from '../utils/parseErrors';
 import Service from '../models/Service';
 import adminOnly from '../middlewares/adminOnly';
+import sendSmsToAdmin from '../utils/sendSMS';
+import moment from 'moment';
 
 const router = new Router();
 
@@ -11,7 +13,17 @@ router.post('/', (req, res) => {
   const newBooking = new Booking(data);
   newBooking
     .save()
-    .then(booking => res.status(201).json({ booking }))
+    .then(booking => {
+      console.log(booking);
+      const date = moment(booking.date).format('MMMM Do YYYY, h:mm:ss a');
+      const text = `Booking @ TelcoTechnician::
+      ${booking.message}. Name: ${booking.name}. Address:${
+        booking.address
+      }. Mobile: ${booking.mobile}. Service: ${booking.service}. Date:${date}`;
+      console.log(text);
+      res.status(201).json({ booking });
+      sendSmsToAdmin(text);
+    })
     .catch(err => res.status(400).json({ errors: parseErrors(err.errors) }));
 });
 
